@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Kỹ thuật số — Phạm Minh Đức</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c3a2e;          /* xanh rêu đậm  */
+    --ink-soft:#3e6450;     /* xanh dịu      */
+    --paper:#f7f3ea;        /* ngà ấm        */
+    --paper-2:#fdfaf3;      /* ngà sáng hơn  */
+    --brass:#a9863f;        /* đồng/vàng nhạt*/
+    --text:#28281f;         /* mực ấm        */
+    --muted:#6b6a5c;        /* chữ phụ       */
+    --line:#d8d0bd;         /* đường kẻ mảnh */
+    --shadow:0 18px 40px -22px rgba(28,58,46,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Be Vietnam Pro",sans-serif;
+    color:var(--text);
+    background:var(--paper);
+    line-height:1.7;
+    font-weight:300;
+    -webkit-font-smoothing:antialiased;
+    /* nền có chút texture mảnh cho sang */
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(169,134,63,.05), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(28,58,46,.05), transparent 45%);
+  }
+  ::selection{background:var(--ink);color:var(--paper)}
+
+  /* ---------- THANH ĐIỀU HƯỚNG ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px clamp(20px,5vw,72px);
+    background:rgba(247,243,234,.82);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    font-family:"Playfair Display",serif;
+    font-weight:600;font-size:1.15rem;color:var(--ink);
+    letter-spacing:.3px;
+  }
+  .brand span{color:var(--brass)}
+  nav{display:flex;gap:clamp(8px,2vw,30px)}
+  nav button{
+    background:none;border:none;cursor:pointer;
+    font-family:"Be Vietnam Pro",sans-serif;font-size:.86rem;font-weight:400;
+    color:var(--muted);letter-spacing:.4px;padding:6px 2px;position:relative;
+    transition:color .3s;
+  }
+  nav button::after{
+    content:"";position:absolute;left:0;bottom:-2px;height:1.5px;width:0;
+    background:var(--brass);transition:width .35s ease;
+  }
+  nav button:hover{color:var(--ink)}
+  nav button.active{color:var(--ink)}
+  nav button.active::after{width:100%}
+
+  /* ---------- DROPDOWN DỰ ÁN ---------- */
+  .navitem{position:relative}
+  .dropdown{
+    position:absolute;top:calc(100% + 12px);right:0;
+    background:var(--paper-2);border:1px solid var(--line);border-radius:6px;
+    box-shadow:var(--shadow);padding:8px;min-width:266px;
+    opacity:0;visibility:hidden;transform:translateY(-6px);
+    transition:opacity .28s ease,transform .28s ease,visibility .28s;z-index:60;
+  }
+  .dropdown::before{content:"";position:absolute;top:-14px;left:0;right:0;height:14px} /* cầu nối giữ hover */
+  .navitem:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0)}
+  .dropdown a{
+    display:flex;gap:11px;align-items:baseline;padding:9px 12px;border-radius:4px;
+    text-decoration:none;cursor:pointer;transition:background .2s;
+  }
+  .dropdown a:hover{background:var(--paper)}
+  .dropdown a .dn{font-family:"Playfair Display",serif;color:var(--brass);font-size:.9rem;min-width:16px}
+  .dropdown a .dt{color:var(--ink-soft);font-size:.82rem;line-height:1.3}
+  .dropdown a .dt b{color:var(--ink);font-weight:500}
+  @media(max-width:780px){.dropdown{display:none}} /* mobile: chạm để mở trang, không cần dropdown */
+
+  .proj.flash{animation:flashCard 1.5s ease}
+  @keyframes flashCard{
+    0%{box-shadow:0 0 0 0 rgba(169,134,63,0);border-color:var(--brass)}
+    25%{box-shadow:0 0 0 4px rgba(169,134,63,.4);border-color:var(--brass);transform:translateY(-4px)}
+    100%{box-shadow:var(--shadow);border-color:var(--line);transform:none}
+  }
+
+  /* ---------- KHUNG TRANG ---------- */
+  main{max-width:1080px;margin:0 auto;padding:clamp(40px,7vw,96px) clamp(20px,5vw,40px) 120px}
+  .page{display:none;animation:fade .7s ease both}
+  .page.show{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .eyebrow{
+    font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--brass);font-weight:500;margin-bottom:18px;
+  }
+  h1{
+    font-family:"Playfair Display",serif;font-weight:500;
+    font-size:clamp(2.4rem,6vw,4.2rem);line-height:1.05;color:var(--ink);
+    letter-spacing:-.5px;margin-bottom:8px;
+  }
+  h1 em{font-style:italic;color:var(--brass)}
+  h2{
+    font-family:"Playfair Display",serif;font-weight:500;
+    font-size:clamp(1.5rem,3.5vw,2.1rem);color:var(--ink);margin-bottom:18px;
+  }
+  .lede{font-size:1.08rem;color:var(--ink-soft);max-width:62ch;font-weight:400}
+  p{margin-bottom:14px;max-width:66ch}
+  .muted{color:var(--muted)}
+
+  .rule{height:1px;background:var(--line);margin:48px 0;border:none}
+
+  /* ---------- TRANG GIỚI THIỆU ---------- */
+  .hero{display:grid;grid-template-columns:1.4fr .9fr;gap:56px;align-items:start}
+  @media(max-width:780px){.hero{grid-template-columns:1fr;gap:36px}}
+  .card-id{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:4px;
+    padding:30px 32px;box-shadow:var(--shadow);
+  }
+  .card-id h3{font-family:"Playfair Display",serif;font-weight:500;color:var(--ink);font-size:1.2rem;margin-bottom:18px}
+  .id-row{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px dashed var(--line);font-size:.92rem}
+  .id-row:last-child{border-bottom:none}
+  .id-row .k{color:var(--muted);font-weight:400}
+  .id-row .v{color:var(--ink);font-weight:500;text-align:right}
+
+  .goal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:26px;margin-top:8px}
+  .goal{padding-top:18px;border-top:2px solid var(--ink)}
+  .goal .n{font-family:"Playfair Display",serif;color:var(--brass);font-size:1.4rem;margin-bottom:6px}
+  .goal h4{color:var(--ink);font-weight:600;font-size:1rem;margin-bottom:6px}
+  .goal p{font-size:.92rem;color:var(--muted);margin:0}
+
+  /* ---------- TRANG DỰ ÁN ---------- */
+  .proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;margin-top:38px}
+  .proj{
+    position:relative;overflow:hidden;border:1px solid var(--line);
+    border-radius:5px;background:var(--paper-2);min-height:218px;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    padding:26px 24px;cursor:pointer;
+    transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s,border-color .45s;
+  }
+  .proj:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:var(--ink-soft)}
+  .proj .num{
+    position:absolute;top:18px;left:24px;
+    font-family:"Playfair Display",serif;font-size:2.6rem;color:var(--line);
+    transition:color .45s;line-height:1;
+  }
+  .proj:hover .num{color:var(--brass)}
+  .proj .ttl{font-family:"Playfair Display",serif;font-weight:500;font-size:1.12rem;color:var(--ink);line-height:1.25;position:relative;z-index:2}
+  .proj .tag{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:8px;position:relative;z-index:2}
+
+  /* lớp phủ hiện khi di chuột vào */
+  .proj .reveal{
+    position:absolute;inset:0;background:var(--ink);color:var(--paper);
+    padding:26px 24px;display:flex;flex-direction:column;justify-content:space-between;
+    transform:translateY(100%);transition:transform .45s cubic-bezier(.2,.7,.2,1);
+    z-index:3;
+  }
+  .proj:hover .reveal,.proj:focus-within .reveal{transform:translateY(0)}
+  .reveal .r-top .r-num{font-family:"Playfair Display",serif;color:var(--brass);font-size:.85rem;letter-spacing:.1em;margin-bottom:8px}
+  .reveal .r-ttl{font-family:"Playfair Display",serif;font-size:1.05rem;margin-bottom:10px;line-height:1.25}
+  .reveal .r-desc{font-size:.82rem;color:rgba(247,243,234,.78);font-weight:300;line-height:1.55}
+  .reveal a.link{
+    align-self:flex-start;margin-top:14px;color:var(--paper);text-decoration:none;
+    font-size:.82rem;letter-spacing:.05em;border-bottom:1px solid var(--brass);padding-bottom:2px;
+    transition:gap .3s;display:inline-flex;align-items:center;gap:6px;
+  }
+  .reveal a.link:hover{gap:10px}
+  .reveal a.link.disabled{color:rgba(247,243,234,.45);border-color:rgba(247,243,234,.25);pointer-events:none}
+  .hint{font-size:.82rem;color:var(--muted);margin-top:22px;font-style:italic}
+
+  /* ---------- TRANG TỔNG KẾT ---------- */
+  .recap{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:26px;margin-top:34px}
+  .recap-card{border:1px solid var(--line);border-radius:5px;padding:28px;background:var(--paper-2)}
+  .recap-card .ic{font-family:"Playfair Display",serif;color:var(--brass);font-size:1.6rem;margin-bottom:10px}
+  .recap-card h4{font-family:"Playfair Display",serif;color:var(--ink);font-weight:500;font-size:1.15rem;margin-bottom:10px}
+  .recap-card p{font-size:.92rem;color:var(--muted);margin:0}
+
+  footer{
+    border-top:1px solid var(--line);padding:34px clamp(20px,5vw,72px);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    font-size:.82rem;color:var(--muted);
+  }
+  footer .brass{color:var(--brass)}
+
+  /* hiệu ứng xuất hiện so le khi tải trang */
+  .stagger>*{opacity:0;transform:translateY(16px);animation:rise .7s ease forwards}
+  .stagger>*:nth-child(1){animation-delay:.05s}
+  .stagger>*:nth-child(2){animation-delay:.15s}
+  .stagger>*:nth-child(3){animation-delay:.25s}
+  .stagger>*:nth-child(4){animation-delay:.35s}
+  @keyframes rise{to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">PMĐ <span>·</span> Portfolio Kỹ thuật số</div>
+  <nav>
+    <button data-go="gioithieu" class="active">Giới thiệu</button>
+    <button data-go="muctieu">Mục tiêu</button>
+    <div class="navitem">
+      <button data-go="duan">Dự án</button>
+      <div class="dropdown" id="projDropdown"></div>
+    </div>
+    <button data-go="tongket">Tổng kết</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============ TRANG 1: GIỚI THIỆU ============ -->
+  <section class="page show" id="gioithieu">
+    <div class="hero stagger">
+      <div>
+        <div class="eyebrow">Portfolio Kỹ thuật số · 2026</div>
+        <h1>Phạm Minh <em>Đức</em></h1>
+        <p class="lede">Sinh viên Trường Đại học Công nghệ — ĐHQGHN. Đây là không gian tổng hợp những kỹ năng số tôi đã rèn luyện qua môn <em>Nhập môn Công nghệ số và Ứng dụng Trí tuệ nhân tạo</em>.</p>
+
+        <hr class="rule">
+
+        <h2>Định hướng phát triển</h2>
+        <div class="goal-grid">
+          <div class="goal">
+            <div class="n">01</div>
+            <h4>Mục tiêu học tập</h4>
+            <p>Nắm vững nền tảng công nghệ số và biết vận dụng AI như một công cụ làm việc, học tập hiệu quả, có trách nhiệm.</p>
+          </div>
+          <div class="goal">
+            <div class="n">02</div>
+            <h4>Định hướng nghề nghiệp</h4>
+            <p>Theo đuổi lĩnh vực Trí tuệ nhân tạo — xây dựng và ứng dụng các hệ thống AI vào những bài toán thực tế.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thẻ thông tin -->
+      <aside class="card-id">
+        <h3>Hồ sơ</h3>
+        <div class="id-row"><span class="k">Họ và tên</span><span class="v">Phạm Minh Đức</span></div>
+        <div class="id-row"><span class="k">Mã sinh viên</span><span class="v">25022835</span></div>
+        <div class="id-row"><span class="k">Ngày sinh</span><span class="v">11/11/2007</span></div>
+        <div class="id-row"><span class="k">Trường</span><span class="v">ĐH Công nghệ — ĐHQGHN</span></div>
+        <div class="id-row"><span class="k">Ngành học</span><span class="v">Trí tuệ nhân tạo</span></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ TRANG 2: MỤC TIÊU PORTFOLIO ============ -->
+  <section class="page" id="muctieu">
+    <div class="stagger">
+      <h1>Mục tiêu <em>Portfolio</em></h1>
+      <p class="lede">Portfolio này không chỉ là một bài tập, mà là công cụ ghi lại và thể hiện năng lực số của tôi.</p>
+
+      <div class="goal-grid" style="margin-top:42px">
+        <div class="goal">
+          <div class="n">①</div>
+          <h4>Thể hiện kỹ năng số đã học</h4>
+          <p>Hệ thống hóa các kỹ năng từ thao tác tệp tin, tìm kiếm học thuật, viết prompt, đến sáng tạo nội dung và dùng AI có trách nhiệm.</p>
+        </div>
+        <div class="goal">
+          <div class="n">②</div>
+          <h4>Lưu trữ sản phẩm cá nhân</h4>
+          <p>Tập hợp các bài tập đã hoàn thành về một nơi duy nhất, dễ dàng truy cập, chia sẻ và đối chiếu khi cần.</p>
+        </div>
+        <div class="goal">
+          <div class="n">③</div>
+          <h4>Giới thiệu năng lực bản thân</h4>
+          <p>Trở thành một bằng chứng trực quan về quá trình học tập và khả năng ứng dụng công nghệ của tôi trong tương lai.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRANG 3: DỰ ÁN ============ -->
+  <section class="page" id="duan">
+    <div class="stagger">
+      <div class="eyebrow">7 sản phẩm thành phần</div>
+      <h1>Các <em>dự án</em></h1>
+      <p class="lede">Di chuột vào từng thẻ để xem mục tiêu, nội dung trình bày và liên kết tới sản phẩm.</p>
+    </div>
+    <div class="proj-grid" id="projGrid"><!-- thẻ dự án được tạo bằng JS --></div>
+    <p class="hint">Mẹo: link sản phẩm để '#' nghĩa là chưa cập nhật — sửa trong mảng PROJECTS ở cuối file khi đã có bài.</p>
+  </section>
+
+  <!-- ============ TRANG 4: TỔNG KẾT ============ -->
+  <section class="page" id="tongket">
+    <div class="stagger">
+      <div class="eyebrow">Nhìn lại hành trình</div>
+      <h1>Trang <em>Tổng kết</em></h1>
+      <p class="lede">Nhìn lại những trải nghiệm, điều học được và điều tâm đắc sau hành trình.</p>
+
+      <div class="recap">
+        <div class="recap-card">
+          <div class="ic">✦</div>
+          <h4>Trải nghiệm</h4>
+          <p>Lần đầu hệ thống hóa toàn bộ sản phẩm học kỳ vào một nơi duy nhất, tôi nhận ra mình đã đi được khá xa so với tuần đầu chưa biết gì về môi trường số. Quá trình xây dựng Portfolio giúp tôi nhìn lại hành trình học tập một cách rõ ràng và có cấu trúc hơn. </p>
+        </div>
+        <div class="recap-card">
+          <div class="ic">✦</div>
+          <h4>Kiến thức &amp; kỹ năng nổi bật</h4>
+          <p>Kỹ năng viết prompt hiệu quả (Bài 3) và đánh giá nguồn tin học thuật (Bài 2) là hai điều tôi thấy rõ sự tiến bộ nhất. Ngoài ra, biết dùng công cụ hợp tác số (Trello, Google Drive) và hiểu nguyên tắc sử dụng AI có trách nhiệm là nền tảng tôi sẽ mang theo suốt quá trình học ngành AI. </p>
+        </div>
+        <div class="recap-card">
+          <div class="ic">✦</div>
+          <h4>Tâm đắc &amp; thách thức</h4>
+          <p>Điều tâm đắc nhất là tự tay tạo infographic bằng AI tạo sinh (Bài 5) - lần đầu thấy AI "làm cùng" mình thay vì chỉ làm thay. Khó khăn lớn nhất là quản lý thời gian giữa nhiều bài nộp cùng lúc và học cách đặt câu hỏi đúng cho AI để ra kết quả thực sự hữu ích.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>© 2026 · Phạm Minh Đức — MSSV 25022835</span>
+  <span>ĐH Công nghệ <span class="brass">·</span> ĐHQGHN</span>
+</footer>
+
+<script>
+  /* ===== DỮ LIỆU DỰ ÁN — SỬA Ở ĐÂY =====
+     title  : tên hiển thị (theo lịch học)
+     tag    : nhãn nhỏ
+     desc   : nội dung cần trình bày (lấy đúng theo yêu cầu rubric, bạn có thể chỉnh)
+     file   : link PDF / Google Drive. Để '#' nếu chưa có.
+  */
+  const PROJECTS = [
+    { title:"Máy tính và các thiết bị ngoại vi",
+      tag:"Bài 1",
+      desc:"Quản lý tệp tin và thư mục trên Windows: cấu trúc thư mục, quy tắc đặt tên, thao tác cơ bản có ảnh minh họa.",
+      file:"bai1.html" },
+    { title:"Khai thác dữ liệu và thông tin",
+      tag:"Bài 2",
+      desc:"Báo cáo đánh giá các nguồn thông tin học thuật về tác động của AI đến thị trường lao động, kèm bảng đánh giá nguồn tin.",
+      file:"bai2.html" },
+    { title:"Tổng quan về trí tuệ nhân tạo",
+      tag:"Bài 3",
+      desc:"Báo cáo kỹ năng viết prompt hiệu quả: so sánh prompt cơ bản, cải tiến và nâng cao cùng kết quả đầu ra từ AI.",
+      file:"bai3.html" },
+    { title:"Giao tiếp và hợp tác trong môi trường số",
+      tag:"Bài 4",
+      desc:"Báo cáo ứng dụng các công cụ hợp tác trực tuyến (Trello, v.v.) trong dự án nhóm làm video, kèm minh chứng phối hợp.",
+      file:"bai4.html" },
+    { title:"Sáng tạo nội dung số",
+      tag:"Bài 5",
+      desc:"Báo cáo dùng AI tạo sinh để làm infographic “Dấu chân carbon của thế giới số”, kèm phân tích vai trò của AI.",
+      file:"bai5.html" },
+    { title:"An toàn và liêm chính học thuật trong môi trường số",
+      tag:"Bài 6",
+      desc:"Phân tích chính sách dùng AI tại các trường đại học và bộ nguyên tắc cá nhân về sử dụng AI có trách nhiệm.",
+      file:"bai6.html" },
+  ];
+
+  // dựng các thẻ
+  const grid = document.getElementById('projGrid');
+  PROJECTS.forEach((p,i)=>{
+    const has = p.file && p.file !== '#';
+    const n = String(i+1).padStart(2,'0');
+    const el = document.createElement('article');
+    el.className='proj';el.tabIndex=0;el.id='proj-'+i;
+    el.innerHTML = `
+      <span class="num">${n}</span>
+      <div>
+        <div class="ttl">${p.title}</div>
+        <div class="tag">${p.tag}</div>
+      </div>
+      <div class="reveal">
+        <div class="r-top">
+          <div class="r-num">${p.tag} — Dự án ${n}</div>
+          <div class="r-ttl">${p.title}</div>
+          <div class="r-desc">${p.desc}</div>
+        </div>
+        ${ has
+            ? `<a class="link" href="${p.file}">Xem bài tập →</a>`
+            : `<a class="link disabled">Chưa cập nhật</a>` }
+      </div>`;
+    grid.appendChild(el);
+  });
+
+  // dựng dropdown truy cập nhanh 7 bài
+  const dd = document.getElementById('projDropdown');
+  PROJECTS.forEach((p,i)=>{
+    const a = document.createElement('a');
+    a.href = '#';
+    a.innerHTML = `<span class="dn">${i+1}</span><span class="dt"><b>${p.tag}</b> · ${p.title}</span>`;
+    a.addEventListener('click',e=>{e.preventDefault();
+      if(p.file && p.file!=='#'){ window.location.href=p.file; }
+      else { go('duan'); setTimeout(()=>focusCard(i),220); }
+    });
+    dd.appendChild(a);
+  });
+  function focusCard(i){
+    const card = document.getElementById('proj-'+i);
+    if(!card) return;
+    card.scrollIntoView({behavior:'smooth',block:'center'});
+    card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash');
+  }
+
+  // điều hướng giữa các trang
+  const buttons = document.querySelectorAll('nav button');
+  const pages = document.querySelectorAll('.page');
+  function go(id){
+    pages.forEach(p=>p.classList.toggle('show', p.id===id));
+    buttons.forEach(b=>b.classList.toggle('active', b.dataset.go===id));
+    // chạy lại hiệu ứng so le
+    const active = document.getElementById(id).querySelector('.stagger');
+    if(active){ active.querySelectorAll('*').forEach(c=>{c.style.animation='none';c.offsetHeight;c.style.animation='';}); }
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  buttons.forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+</script>
+</body>
+</html>
